@@ -1,0 +1,85 @@
+#pragma once
+#include <iostream>
+
+using namespace std;
+
+class File{
+protected:
+	int number_open;
+public:
+	FileOb() : number_open{ 0 } {};
+	virtual void display(const char* path) {
+		FILE* out;
+		char* Str = new char[225];
+		if (!fopen_s(&out, path, "r")) {
+		    while (!feof(out)) {
+				fgets(Str, 225, out);
+				cout << Str; 
+			}
+			fclose(out);
+			number_open += 1;
+		}
+		else
+			cout << "Error";
+	}
+	
+	int getNumber_open() {
+		return number_open;
+	}
+};
+
+
+
+class FileACIIChild : public File{
+public:
+	FileACIIChild() : File() {};
+	virtual void display(const char* path) {
+		FILE* out;
+		char* Str = new char[225];
+		if (!fopen_s(&out, path, "r")) {
+			while (!feof(out)) {
+				fgets(Str, 225, out);
+				cout << Str;
+			}
+			fclose(out);
+			number_open += 1;
+		}
+		else
+			cout << "Error";
+	}
+};
+
+
+class FileBitChild : public File {
+	void to_binary_code(int a) {
+		int* number = new int[225];
+		int lenght = 0; \
+		while (a > 0) {
+			number[lenght] = a&1; 
+			lenght++;
+			a >>= 1;
+		}
+		for (int i = lenght-1; i > -1; i--) {
+			cout << number[i];
+		}
+	}
+public:
+	FileBitChild() : File() {};
+	virtual void display(const char* path) {
+		FILE* out;
+		char Sym;
+		if (!fopen_s(&out, path, "r")) {
+			while (!feof(out)) {
+				Sym = fgetc(out); 
+				if (Sym != '\n' && Sym != '\0') 
+					to_binary_code((int)Sym); 
+				else
+					cout << endl;
+			}
+			fclose(out);
+			number_open += 1;
+		}
+		else
+			cout << "Error";
+	}
+};
